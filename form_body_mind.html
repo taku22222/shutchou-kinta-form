@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="description" content="出張整体キンタ｜体と心のことを気軽に教えてください">
+<meta name="robots" content="noindex,nofollow">
+<title>体と心のこと、気軽に聞かせてください｜出張整体キンタ</title>
+<link rel="stylesheet" href="form_base.css">
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <span class="variant-badge">体・心の相談</span>
+    <h1>体と心のこと、<br>気軽に聞かせてください 🍀</h1>
+    <p class="lead">出張整体キンタです。お話を聞かせていただくだけでも大歓迎。<br>無理に詳しく書かなくて大丈夫です。</p>
+  </div>
+
+  <div class="safety">
+    <h2>🛡 安心してください</h2>
+    <ul>
+      <li>全ての項目は<strong>任意</strong>です。1つだけでも送れます</li>
+      <li>営業や売り込みは<strong>一切しません</strong></li>
+      <li>あなたの情報は<strong>キンタ本人しか見ません</strong></li>
+      <li>送信後はLINEで<strong>1〜2日以内</strong>にお返事します</li>
+      <li>やめたい時は<strong>LINEブロックで完了</strong>。記録削除も可能です</li>
+    </ul>
+  </div>
+
+  <div class="progress">
+    <div class="progress-bar"><div id="progressBar"></div></div>
+    <div class="progress-label" id="progressLabel">STEP 1 / 5</div>
+  </div>
+
+  <div class="autosave" id="autoSave" style="display:none;">📝 入力内容は自動保存されています</div>
+
+  <form id="contactForm" autocomplete="off">
+
+  <!-- ─────── STEP 1：あなたのこと ─────── -->
+  <div class="step active" data-step="1">
+    <p class="step-title">STEP 1：あなたのこと</p>
+    <p class="step-sub">どう呼べばいいか・どう連絡できるかだけ、よければ。</p>
+
+    <div class="field">
+      <label class="field-label" for="name">お名前・ニックネーム<span class="field-optional">（任意）</span></label>
+      <span class="field-hint">ニックネームでもOK。書きたくなければ空欄でどうぞ。</span>
+      <input type="text" id="name" name="name" placeholder="例：たくみ / 山田 など">
+    </div>
+
+    <div class="field">
+      <label class="field-label">連絡したい方法<span class="field-optional">（任意・複数可）</span></label>
+      <div class="chips">
+        <label class="chip"><input type="checkbox" name="contact" value="LINE">LINE</label>
+        <label class="chip"><input type="checkbox" name="contact" value="メール">メール</label>
+        <label class="chip"><input type="checkbox" name="contact" value="特に希望なし">特に希望なし</label>
+      </div>
+    </div>
+
+    <div class="field" id="emailField" style="display:none;">
+      <label class="field-label" for="email">メールアドレス<span class="field-optional">（任意）</span></label>
+      <input type="email" id="email" name="email" placeholder="example@xxx.com">
+    </div>
+
+    <div class="btn-row">
+      <button type="button" class="btn btn-primary" onclick="nextStep()">次へ →</button>
+    </div>
+  </div>
+
+  <!-- ─────── STEP 2：カテゴリ選択 ─────── -->
+  <div class="step" data-step="2">
+    <p class="step-title">STEP 2：気になっているのは？</p>
+    <p class="step-sub">どちらか1つでも、両方でもOK。何もチェックしなくても次に進めます。</p>
+
+    <div class="bigchips">
+      <label class="bigchip">
+        <input type="checkbox" name="category" value="body">
+        <span class="bigchip-icon">🏃</span>
+        <span class="bigchip-text">
+          <span class="bigchip-title">体のこと</span>
+          <span class="bigchip-sub">腰・肩・膝・姿勢など</span>
+        </span>
+      </label>
+      <label class="bigchip">
+        <input type="checkbox" name="category" value="mind">
+        <span class="bigchip-icon">🌙</span>
+        <span class="bigchip-text">
+          <span class="bigchip-title">心のこと</span>
+          <span class="bigchip-sub">モヤモヤ・気分・睡眠など</span>
+        </span>
+      </label>
+    </div>
+
+    <div class="btn-row">
+      <button type="button" class="btn btn-ghost" onclick="prevStep()">← 戻る</button>
+      <button type="button" class="btn btn-primary" onclick="nextStep()">次へ →</button>
+    </div>
+  </div>
+
+  <!-- ─────── STEP 3：詳細（動的展開） ─────── -->
+  <div class="step" data-step="3">
+    <p class="step-title">STEP 3：もう少し教えてください</p>
+    <p class="step-sub">分かる範囲で、書ける所だけで大丈夫です。</p>
+
+    <!-- 体のこと カード -->
+    <div class="cat-card" data-cat="body">
+      <p class="cat-card-title">🏃 体のことについて</p>
+      <div class="field">
+        <label class="field-label">気になっている部位<span class="field-optional">（任意・複数可）</span></label>
+        <div class="chips">
+          <label class="chip"><input type="checkbox" name="body_part" value="腰">腰</label>
+          <label class="chip"><input type="checkbox" name="body_part" value="首・肩">首・肩</label>
+          <label class="chip"><input type="checkbox" name="body_part" value="背中">背中</label>
+          <label class="chip"><input type="checkbox" name="body_part" value="膝">膝</label>
+          <label class="chip"><input type="checkbox" name="body_part" value="足">足</label>
+          <label class="chip"><input type="checkbox" name="body_part" value="腕・手">腕・手</label>
+          <label class="chip"><input type="checkbox" name="body_part" value="頭・顎">頭・顎</label>
+          <label class="chip"><input type="checkbox" name="body_part" value="全身・姿勢">全身・姿勢</label>
+          <label class="chip"><input type="checkbox" name="body_part" value="その他">その他</label>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="body_symptom">どんな状態？<span class="field-optional">（任意）</span></label>
+        <span class="field-hint">例：朝起きると腰が重い／肩がパンパンに張る 等</span>
+        <textarea id="body_symptom" name="body_symptom" placeholder="気になっている症状を一言で"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label" for="body_since">いつ頃から？<span class="field-optional">（任意）</span></label>
+        <input type="text" id="body_since" name="body_since" placeholder="例：1ヶ月前ぐらいから">
+      </div>
+    </div>
+
+    <!-- 心のこと カード -->
+    <div class="cat-card" data-cat="mind">
+      <p class="cat-card-title">🌙 心のことについて</p>
+      <div class="field">
+        <label class="field-label">どんな状態？<span class="field-optional">（任意・複数可）</span></label>
+        <div class="chips">
+          <label class="chip"><input type="checkbox" name="mind_state" value="気分の落ち込み">気分の落ち込み</label>
+          <label class="chip"><input type="checkbox" name="mind_state" value="不安・心配">不安・心配</label>
+          <label class="chip"><input type="checkbox" name="mind_state" value="疲れ感">疲れ感</label>
+          <label class="chip"><input type="checkbox" name="mind_state" value="やる気が出ない">やる気が出ない</label>
+          <label class="chip"><input type="checkbox" name="mind_state" value="眠りが浅い">眠りが浅い</label>
+          <label class="chip"><input type="checkbox" name="mind_state" value="イライラ">イライラ</label>
+          <label class="chip"><input type="checkbox" name="mind_state" value="うまく言えない">うまく言えない</label>
+          <label class="chip"><input type="checkbox" name="mind_state" value="その他">その他</label>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="mind_detail">よかったらもう少し<span class="field-optional">（任意）</span></label>
+        <span class="field-hint">うまく言葉にできなくても構いません。書ける範囲で。</span>
+        <textarea id="mind_detail" name="mind_detail" placeholder="例：最近モヤモヤしてる"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label" for="mind_since">いつ頃から？<span class="field-optional">（任意）</span></label>
+        <input type="text" id="mind_since" name="mind_since" placeholder="例：2週間ぐらい前から">
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button type="button" class="btn btn-ghost" onclick="prevStep()">← 戻る</button>
+      <button type="button" class="btn btn-primary" onclick="nextStep()">次へ →</button>
+    </div>
+  </div>
+
+  <!-- ─────── STEP 4：もしよければ ─────── -->
+  <div class="step" data-step="4">
+    <p class="step-title">STEP 4：もしよければ</p>
+    <p class="step-sub">書かなくて全然OK。次のステップに進んじゃってください。</p>
+
+    <div class="field">
+      <label class="field-label" for="age">年代<span class="field-optional">（任意）</span></label>
+      <select id="age" name="age">
+        <option value="">選ばない</option>
+        <option value="10代">10代</option>
+        <option value="20代">20代</option>
+        <option value="30代">30代</option>
+        <option value="40代">40代</option>
+        <option value="50代">50代</option>
+        <option value="60代">60代</option>
+        <option value="70代以上">70代以上</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="field-label">性別<span class="field-optional">（任意）</span></label>
+      <div class="chips">
+        <label class="chip"><input type="radio" name="gender" value="女性">女性</label>
+        <label class="chip"><input type="radio" name="gender" value="男性">男性</label>
+        <label class="chip"><input type="radio" name="gender" value="その他">その他</label>
+        <label class="chip"><input type="radio" name="gender" value="答えたくない">答えたくない</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="area">お住まいエリア<span class="field-optional">（任意）</span></label>
+      <span class="field-hint">市町村まで or 「沖縄本島南部」程度でOK。</span>
+      <input type="text" id="area" name="area" placeholder="例：沖縄市・那覇市 など">
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="history">気をつけたほうがいいこと<span class="field-optional">（任意）</span></label>
+      <span class="field-hint">怪我・病気・通院中 など。書ける範囲で。</span>
+      <textarea id="history" name="history" placeholder="例：3年前ヘルニア手術／通院中 など"></textarea>
+    </div>
+
+    <div class="btn-row">
+      <button type="button" class="btn btn-ghost" onclick="prevStep()">← 戻る</button>
+      <button type="button" class="btn btn-primary" onclick="nextStep()">次へ →</button>
+    </div>
+  </div>
+
+  <!-- ─────── STEP 5：最後に ─────── -->
+  <div class="step" data-step="5">
+    <p class="step-title">STEP 5：最後に</p>
+    <p class="step-sub">これだけでも全然OKです。</p>
+
+    <div class="field">
+      <label class="field-label" for="message">一言メッセージ・質問<span class="field-optional">（任意）</span></label>
+      <span class="field-hint">「初めまして」だけでも、なんでも構いません。</span>
+      <textarea id="message" name="message" rows="5" placeholder="例：以前ブログを読んで連絡してみました"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">キンタを知ったきっかけ<span class="field-optional">（任意）</span></label>
+      <div class="chips">
+        <label class="chip"><input type="checkbox" name="source" value="ブログ">ブログ</label>
+        <label class="chip"><input type="checkbox" name="source" value="Instagram">Instagram</label>
+        <label class="chip"><input type="checkbox" name="source" value="紹介">紹介</label>
+        <label class="chip"><input type="checkbox" name="source" value="名刺">名刺</label>
+        <label class="chip"><input type="checkbox" name="source" value="その他">その他</label>
+      </div>
+    </div>
+
+    <div class="consent-box">
+      <span class="consent-text">
+        送信ボタンを押すと、<a href="privacy.html" target="_blank">プライバシーポリシー</a>に同意したものとみなされます。<br>
+        いつでも削除依頼・登録解除が可能です。
+      </span>
+    </div>
+
+    <div class="btn-row">
+      <button type="button" class="btn btn-ghost" onclick="prevStep()">← 戻る</button>
+      <button type="button" class="btn btn-submit" id="submitBtn" onclick="submitForm()">送信する 📨</button>
+    </div>
+  </div>
+
+  </form>
+
+  <div class="done" id="doneBox">
+    <h2>✅ 送信ありがとうございました！</h2>
+    <p>キンタが内容を確認します。<br>慌てず、ゆっくり次のステップを進めてください。</p>
+    <div class="next">
+      <h3>このあとの流れ</h3>
+      <ol>
+        <li>下のボタンからLINE登録（10秒）</li>
+        <li>キンタからLINEで「内容拝見しました」のメッセージが届きます（1〜2日以内）</li>
+        <li>そこから無理ないペースでやり取りしていきましょう</li>
+      </ol>
+    </div>
+    <a id="lineCtaBtn" href="#" class="line-cta" target="_blank">LINEで友だち追加する →</a>
+    <p style="font-size: 12px; color: var(--text-soft); margin-top: 24px;">
+      ※ LINE登録後、いつでも「やめたい」と思ったらブロックで完了します。<br>
+      ご相談・LINE登録は完全無料です。
+    </p>
+  </div>
+
+  <div class="foot">
+    出張整体キンタ｜<a href="privacy.html">プライバシーポリシー</a>｜<a href="faq.html">よくある質問</a>
+  </div>
+
+</div>
+
+<script src="form_base.js"></script>
+<script>
+  initForm({
+    formType:   'body_mind',
+    formLabel:  '体・心の相談',
+    totalSteps: 5,
+    categoryStep: 2,
+    detailStep:   3,
+    gasUrl:     'https://script.google.com/macros/s/AKfycbyxuQHrkZPm5rBmp6g3RT2qgM2CdYt8LHyW8fzIWgR4Rz46my7bkmcpq4qLWBZUhPKhxQ/exec',
+    lineUrl:    'https://lin.ee/wBWavze',
+    storageKey: 'kinta_form_bm_v1'
+  });
+</script>
+</body>
+</html>

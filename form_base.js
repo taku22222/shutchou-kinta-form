@@ -25,9 +25,24 @@ function initForm(cfg) {
   CFG = cfg;
   TOTAL_STEPS = cfg.totalSteps || 4;
   STORAGE_KEY = cfg.storageKey || "kinta_form_default_v1";
+  injectHoneypot();
   loadDraft();
   updateProgress();
   bindEvents();
+}
+
+// ─────── スパム対策：ハニーポット欄を注入 ───────
+// 人には見えず、キーボードでも到達しない罠フィールド。
+// bot が自動入力すると GAS 側で送信を無視する。全フォーム共通で1箇所に集約。
+function injectHoneypot() {
+  const form = document.getElementById('contactForm');
+  if (!form || form.querySelector('input[name="website"]')) return;
+  const wrap = document.createElement('div');
+  wrap.setAttribute('aria-hidden', 'true');
+  wrap.style.cssText = 'position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden;';
+  wrap.innerHTML = '<label>Webサイト（このまま空欄にしてください）'
+    + '<input type="text" name="website" tabindex="-1" autocomplete="off"></label>';
+  form.insertBefore(wrap, form.firstChild);
 }
 
 function updateProgress() {

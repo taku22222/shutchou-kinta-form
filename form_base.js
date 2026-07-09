@@ -1,7 +1,8 @@
 /* ─────── 出張整体キンタ｜受付フォーム 共通ロジック ─────── */
 /*
  * 使い方：
- *   1. HTML側で window.FORM_CONFIG をセットする：
+ *   1. <script src="form_base.js"></script> を読み込む
+ *   2. その後 initForm(cfg) を呼ぶ。cfg の形：
  *      {
  *        formType: 'body' | 'body_mind' | 'body_ai' | 'full',
  *        formLabel: '体のことフォーム',
@@ -12,7 +13,6 @@
  *        lineUrl:      'https://line.me/R/ti/p/...',
  *        storageKey:   'kinta_form_body_v1'
  *      }
- *   2. その後 <script src="form_base.js"></script>
  */
 
 // ─────── 状態管理 ───────

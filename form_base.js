@@ -27,8 +27,34 @@ function initForm(cfg) {
   STORAGE_KEY = cfg.storageKey || "kinta_form_default_v1";
   injectHoneypot();
   loadDraft();
+  injectClearControl();
+  refreshClearControl();
   updateProgress();
   bindEvents();
+}
+
+// ─────── 共有端末向け：入力内容を手動消去するリンクを注入 ───────
+// 下書きは端末内に最大3日残るため、家族共有のiPad等で「自分の入力を消したい」時に使う。
+function injectClearControl() {
+  const foot = document.querySelector('.foot');
+  if (!foot || document.getElementById('clearDraftWrap')) return;
+  const p = document.createElement('p');
+  p.id = 'clearDraftWrap';
+  p.style.cssText = 'text-align:center; margin-top:14px; display:none;';
+  p.innerHTML = '<a id="clearDraftBtn" href="#" style="color:var(--text-soft); font-size:12px; text-decoration:underline;">🗑 入力内容を消去（この端末から）</a>';
+  foot.parentNode.insertBefore(p, foot);
+  document.getElementById('clearDraftBtn').addEventListener('click', e => {
+    e.preventDefault();
+    if (!confirm('この端末に自動保存された入力内容を消去します。よろしいですか？')) return;
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
+  });
+}
+
+// 下書きの有無に応じて消去リンクの表示を切り替える
+function refreshClearControl() {
+  const wrap = document.getElementById('clearDraftWrap');
+  if (wrap) wrap.style.display = localStorage.getItem(STORAGE_KEY) ? 'block' : 'none';
 }
 
 // ─────── スパム対策：ハニーポット欄を注入 ───────
@@ -97,7 +123,23 @@ function refreshDetailCards() {
   const selected = Array.from(document.querySelectorAll('input[name="category"]:checked')).map(i => i.value);
   document.querySelectorAll('.cat-card').forEach(card => {
     const cat = card.getAttribute('data-cat');
-    card.classList.toggle('active', selected.includes(cat));
+    const on = selected.includes(cat);
+    card.classList.toggle('active', on);
+    // 未選択（非表示）カードの入力は送信に含めない＝クリアする（幽霊データ防止）
+    if (!on) clearInputsIn(card);
+  });
+}
+
+// 指定コンテナ内の入力値をすべてクリア
+function clearInputsIn(container) {
+  container.querySelectorAll('input, textarea, select').forEach(el => {
+    if (el.type === 'checkbox' || el.type === 'radio') {
+      el.checked = false;
+      const chip = el.closest('.chip') || el.closest('.bigchip');
+      if (chip) chip.classList.remove('checked');
+    } else {
+      el.value = '';
+    }
   });
 }
 
@@ -147,6 +189,7 @@ function saveDraft() {
   try {
     const data = { ...getFormData(), step: currentStep, savedAt: Date.now() };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    refreshClearControl();
     const a = document.getElementById('autoSave');
     if (a) {
       a.style.display = 'block';
@@ -161,7 +204,7 @@ function loadDraft() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return;
     const data = JSON.parse(raw);
-    if (Date.now() - (data.savedAt || 0) > 7 * 24 * 60 * 60 * 1000) {
+    if (Date.now() - (data.savedAt || 0) > 3 * 24 * 60 * 60 * 1000) {
       localStorage.removeItem(STORAGE_KEY);
       return;
     }
@@ -188,6 +231,18 @@ function loadDraft() {
 
 // ─────── 送信 ───────
 async function submitForm() {
+  // 送信前チェック：メール形式（入力があるときだけ検証。任意項目なので空はOK）
+  const emailEl = document.getElementById('email');
+  if (emailEl && emailEl.value.trim() && !emailEl.checkValidity()) {
+    const stepEl = emailEl.closest('.step');
+    if (stepEl) showStep(Number(stepEl.getAttribute('data-step')));
+    alert('メールアドレスの形式をご確認ください。\n（例：example@xxx.com）\n\n分からなければ空欄のままでも送信できます。');
+    emailEl.focus();
+    return;
+  }
+  // 未選択カテゴリの詳細入力を送信対象から除外（幽霊データ防止）
+  refreshDetailCards();
+
   const btn = document.getElementById('submitBtn');
   if (btn) { btn.disabled = true; btn.textContent = '送信中...'; }
 
@@ -206,6 +261,7 @@ async function submitForm() {
     });
 
     localStorage.removeItem(STORAGE_KEY);
+    refreshClearControl();
     document.querySelector('.hero').style.display = 'none';
     document.querySelector('.safety').style.display = 'none';
     document.querySelector('.progress').style.display = 'none';
